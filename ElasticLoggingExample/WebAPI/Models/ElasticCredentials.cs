@@ -1,3 +1,12 @@
 ﻿namespace WebAPI.Models;
 
-public sealed record SerilogCredentials(string Uri,string Username,string Password);
+public sealed class ElasticCredentials{
+
+    public ElasticCredentials()
+    {
+        
+    }
+    public string Uri { get; set;}
+    public string Username { get;set; }
+    public string Password { get;set; }
+}

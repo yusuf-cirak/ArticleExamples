@@ -1,0 +1,15 @@
+# @format
+
+# Kibana server host (default is "localhost")
+server.host: "0.0.0.0"
+
+# Elasticsearch host and authentication settings
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "kibanademo"
+
+# Kibana server name
+server.name: "kibana"
+
+# Kibana server port (default is 5601)
+server.port: 5601

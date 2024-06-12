@@ -1,0 +1,113 @@
+# @format
+
+version: "3.9"
+name: elastic-logging
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    container_name: elasticsearch
+    environment:
+      - cluster.name=es-docker-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      # Elasticsearch security settings
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - KIBANA_PASSWORD=$KIBANA_PASSWORD
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      interval: 15s
+      timeout: 30s
+      retries: 10
+      test: curl -s http://localhost:9200/_cluster/health | grep -vq '"status":"red"' -c
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic-logging
+
+  set_elasticsearch_users:
+    image: alpine:latest
+    container_name: set_elasticsearch_users
+    environment:
+      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+      - KIBANA_PASSWORD=$KIBANA_PASSWORD
+      - ADMIN_USER_PASSWORD=$ADMIN_USER_PASSWORD
+    command: >
+      sh -c "
+      apk add --no-cache curl;
+      echo 'Setting kibana_system user password';
+      until curl -s -XPOST -u elastic:$ELASTIC_PASSWORD -H 'Content-Type: application/json' http://elasticsearch:9200/_security/user/kibana_system/_password -d '{\"password\":\"$KIBANA_PASSWORD\"}' | grep -q '^{}'; do
+      sleep 5;
+      done;
+      echo 'Password set successfully!';
+      echo 'Adding devops user to elasticsearch';
+      curl -s -XPOST -u elastic:$ELASTIC_PASSWORD -H 'Content-Type: application/json' "http://elasticsearch:9200/_security/user/devops"  -d '{
+      \"password\": \"'$ADMIN_USER_PASSWORD'\",
+      \"roles\": [\"superuser\"]}'
+      exit 0;
+      "
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elastic-logging
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.14.0
+    volumes:
+      - ./.elastic/kibana.yaml:/usr/share/kibana/config/kibana.yml
+    healthcheck:
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      test: curl --write-out 'HTTP %{http_code}' --silent --output /dev/null http://kibana:5601/api/status
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      set_elasticsearch_users:
+        condition: service_started
+    networks:
+      - elastic-logging
+
+  # filebeat:
+  #   container_name: filebeat
+  #   image: docker.elastic.co/beats/filebeat:8.14.0
+  #   user: root
+  #   volumes:
+  #     - ./.elastic/filebeat.yaml:/usr/share/filebeat/filebeat.yml
+  #     - ./WebAPI/logs:/var/log/app:ro
+  #   command: ["filebeat", "-e", "-strict.perms=false"]
+  #   depends_on:
+  #     elasticsearch:
+  #       condition: service_healthy
+  #     kibana:
+  #       condition: service_healthy
+  #   networks:
+  #     - elastic-logging
+
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./WebAPI/Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - elastic-logging
+    depends_on:
+      - elasticsearch
+      - kibana
+
+networks:
+  elastic-logging:
+    name: elastic-logging
+    driver: bridge
