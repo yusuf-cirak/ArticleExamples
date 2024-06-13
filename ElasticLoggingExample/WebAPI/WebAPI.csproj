@@ -8,17 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Elastic.CommonSchema.Serilog" Version="8.11.1" />
-        <PackageReference Include="Elastic.Serilog.Sinks" Version="8.11.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4"/>
         <PackageReference Include="Serilog" Version="4.0.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 

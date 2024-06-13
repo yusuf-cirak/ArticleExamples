@@ -18,7 +18,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseLogging();
 
@@ -30,7 +30,7 @@ app.MapGet("/log", (ILogger<Program> logger) =>
         try
         {
             logger.LogInformation("{Type} - {RequestName} has started", transaction, requestName);
-            logger.LogInformation("{Type} - {RequestName} : Failure", authLog, requestName);
+            logger.LogInformation("{Type} - {RequestName} - {@User}", authLog, requestName, new { Name = "John", Surname = "Doe" });
             return Results.Ok();
         }
         finally
