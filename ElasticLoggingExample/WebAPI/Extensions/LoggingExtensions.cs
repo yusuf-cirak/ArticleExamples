@@ -6,6 +6,8 @@ public static class LoggingExtensions
 {
     public static void ConfigureLogging(this WebApplicationBuilder builder)
     {
+        builder.Logging.ClearProviders();
+        
 
         var logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)

@@ -46,8 +46,8 @@ services:
       sleep 5;
       done;
       echo 'Password set successfully!';
-      echo 'Adding devops user to elasticsearch';
-      curl -s -XPOST -u elastic:$ELASTIC_PASSWORD -H 'Content-Type: application/json' "http://elasticsearch:9200/_security/user/devops"  -d '{
+      echo 'Adding admin user to elasticsearch';
+      curl -s -XPOST -u elastic:$ELASTIC_PASSWORD -H 'Content-Type: application/json' "http://elasticsearch:9200/_security/user/admin"  -d '{
       \"password\": \"'$ADMIN_USER_PASSWORD'\",
       \"roles\": [\"superuser\"]}'
       exit 0;
@@ -78,27 +78,13 @@ services:
     networks:
       - elastic-logging
 
-  # filebeat:
-  #   container_name: filebeat
-  #   image: docker.elastic.co/beats/filebeat:8.14.0
-  #   user: root
-  #   volumes:
-  #     - ./.elastic/filebeat.yaml:/usr/share/filebeat/filebeat.yml
-  #     - ./WebAPI/logs:/var/log/app:ro
-  #   command: ["filebeat", "-e", "-strict.perms=false"]
-  #   depends_on:
-  #     elasticsearch:
-  #       condition: service_healthy
-  #     kibana:
-  #       condition: service_healthy
-  #   networks:
-  #     - elastic-logging
-
   api:
     container_name: api
     build:
       context: .
       dockerfile: ./WebAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
     ports:
       - "8080:8080"
     networks:
