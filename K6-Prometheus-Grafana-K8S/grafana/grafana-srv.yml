@@ -1,0 +1,15 @@
+# @format
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      nodePort: 30001
+      port: 80
+      targetPort: 3000
+  selector:
+    app: grafana

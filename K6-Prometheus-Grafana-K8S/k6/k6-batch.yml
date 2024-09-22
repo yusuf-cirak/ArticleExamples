@@ -1,0 +1,33 @@
+# @format
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${JOB_NAME}
+spec:
+  template:
+    spec:
+      containers:
+        - name: k6
+          image: grafana/k6:latest
+          env:
+            - name: K6_PROMETHEUS_RW_SERVER_URL
+              value: "${PROMETHEUS_REMOTE_WRITE_URL}"
+          command: [
+              "k6",
+              "run",
+              "--tag",
+              "testid=${TEST_ID}",
+              "--out",
+              "experimental-prometheus-rw",
+              "/scripts/script.js", # Path inside the container
+            ]
+          volumeMounts:
+            - name: k6-script
+              mountPath: /scripts # Path inside the container where the script will be mounted
+      restartPolicy: Never
+      volumes:
+        - name: k6-script
+          configMap:
+            name: ${CONFIG_MAP_NAME} # Reference the ConfigMap created with the file
+  backoffLimit: 4

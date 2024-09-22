@@ -1,0 +1,15 @@
+# @format
+
+global:
+  scrape_interval: 15s # Prometheus will scrape targets every 15 seconds
+
+# No need for scrape_configs for k6, as you are using remote_write
+remote_write:
+  - url: "http://prometheus:80/api/v1/write"
+    queue_config:
+      capacity: 10000
+      max_samples_per_send: 1000
+      batch_send_deadline: 5s
+      max_shards: 200
+    tls_config:
+      insecure_skip_verify: true # only set this to true for testing; use proper certs for production
