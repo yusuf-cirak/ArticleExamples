@@ -1,4 +1,7 @@
 ﻿
+using GraphQL.Server.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 namespace GraphQL.Server.Domain;
 
 public sealed class Course : Entity
@@ -32,6 +35,16 @@ public sealed class CourseDto
     [IsProjected(true)] public Guid InstructorId { get; set; }
 
     public CourseType Type { get; set; }
+    
+    public Task<InstructorDto?> GetInstructor([Service] AppDbContext ctx,
+        CancellationToken cancellationToken)
+    {
+        Console.WriteLine("GetInstructor for ID " + InstructorId);
+        return ctx.Instructors
+            .Where(i => i.Id == InstructorId)
+            .Select(i => new InstructorDto(i.Id, i.Name, i.Email, i.PhoneNumber))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 
     // public Task<InstructorDto?> GetInstructor([Service] InstructorDataLoader dataLoader,
     //     CancellationToken cancellationToken)
