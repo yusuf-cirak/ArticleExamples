@@ -1,6 +1,5 @@
 ﻿
-using GraphQL.Server.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using GraphQL.Server.Application.UseCases.Instructors.DataLoaders;
 
 namespace GraphQL.Server.Domain;
 
@@ -35,22 +34,12 @@ public sealed class CourseDto
     [IsProjected(true)] public Guid InstructorId { get; set; }
 
     public CourseType Type { get; set; }
-    
-    public Task<InstructorDto?> GetInstructor([Service] AppDbContext ctx,
+
+    public Task<InstructorDto?> GetInstructor([Service] InstructorDataLoader dataLoader,
         CancellationToken cancellationToken)
     {
-        Console.WriteLine("GetInstructor for ID " + InstructorId);
-        return ctx.Instructors
-            .Where(i => i.Id == InstructorId)
-            .Select(i => new InstructorDto(i.Id, i.Name, i.Email, i.PhoneNumber))
-            .FirstOrDefaultAsync(cancellationToken);
+        return dataLoader.LoadAsync(InstructorId, cancellationToken);
     }
-
-    // public Task<InstructorDto?> GetInstructor([Service] InstructorDataLoader dataLoader,
-    //     CancellationToken cancellationToken)
-    // {
-    //     return dataLoader.LoadAsync(InstructorId, cancellationToken);
-    // }
 }
 
 public sealed record CourseInputType(string Title, string Description, Guid InstructorId);
