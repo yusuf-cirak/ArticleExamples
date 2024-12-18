@@ -1,4 +1,5 @@
-﻿using GraphQL.Server.Domain;
+﻿using GraphQL.Server.Application.UseCases.Courses.FilterTypes;
+using GraphQL.Server.Domain;
 using GraphQL.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +53,7 @@ public sealed class CourseQuery
     }
     
     
+    [UseFiltering(typeof(CourseFilterType))]
     public IQueryable<CourseDto> GetCourses([Service] AppDbContext ctx)
     {
         return ctx.Courses
@@ -61,6 +63,7 @@ public sealed class CourseQuery
             Id = c.Id,
             Title = c.Title,
             InstructorId = c.InstructorId,
+            Type = c.Type
         });
     }
 

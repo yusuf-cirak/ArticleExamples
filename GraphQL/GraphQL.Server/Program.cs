@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextPool<AppDbContext>(opt => opt.UseInMemoryDatabase("db"));
 
-builder.AddGraphQL().AddTypes();
+builder.AddGraphQL()
+    .AddTypes()
+    .AddFiltering();
 
 var app = builder.Build();
 

@@ -17,7 +17,7 @@ public sealed class Course : Entity
 
 public enum CourseType
 {
-    Math,
+    Math = 1,
     [GraphQLName("SCIENCE")]
     Science,
     [GraphQLName("HISTORY")]
