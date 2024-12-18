@@ -23,18 +23,33 @@ public sealed class CourseQuery
     //     });
     // }
     
-    // [UseOffsetPaging(IncludeTotalCount = true)]
-    // public IEnumerable<CourseDto> GetOffsetCourses([Service] AppDbContext ctx)
-    // {
-    //     return ctx.Courses
-    //         .Select(c => new CourseDto()
-    //         {
-    //             Description = c.Description,
-    //             Id = c.Id,
-    //             Title = c.Title,
-    //             InstructorId = c.InstructorId
-    //         });
-    // }
+    [UseOffsetPaging(IncludeTotalCount = true)]
+    public IEnumerable<CourseDto> GetOffsetCourses([Service] AppDbContext ctx)
+    {
+        return ctx.Courses
+            .Select(c => new CourseDto()
+            {
+                Description = c.Description,
+                Id = c.Id,
+                Title = c.Title,
+                InstructorId = c.InstructorId
+            });
+    }
+    
+    
+    [UsePaging(IncludeTotalCount = true)]
+    public IEnumerable<CourseDto> GetCursorCourses([Service] AppDbContext ctx)
+    {
+        return ctx.Courses
+            .Select(c => new CourseDto()
+            {
+                Description = c.Description,
+                Id = c.Id,
+                Title = c.Title,
+                InstructorId = c.InstructorId
+            })
+            .OrderBy(c => c.Id);
+    }
     
     
     public IQueryable<CourseDto> GetCourses([Service] AppDbContext ctx)

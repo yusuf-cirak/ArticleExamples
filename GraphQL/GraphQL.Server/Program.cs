@@ -1,5 +1,3 @@
-using Bogus;
-using GraphQL.Server.Domain;
 using GraphQL.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
