@@ -7,7 +7,8 @@ builder.Services.AddDbContextPool<AppDbContext>(opt => opt.UseInMemoryDatabase("
 
 builder.AddGraphQL()
     .AddTypes()
-    .AddFiltering();
+    .AddFiltering()
+    .AddSorting();
 
 var app = builder.Build();
 

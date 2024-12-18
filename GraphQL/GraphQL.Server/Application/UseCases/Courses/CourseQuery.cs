@@ -1,4 +1,5 @@
 ﻿using GraphQL.Server.Application.UseCases.Courses.FilterTypes;
+using GraphQL.Server.Application.UseCases.Courses.Sorters;
 using GraphQL.Server.Domain;
 using GraphQL.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,7 @@ public sealed class CourseQuery
     
     
     [UseFiltering(typeof(CourseFilterType))]
+    [UseSorting(typeof(CourseSortType))]
     public IQueryable<CourseDto> GetCourses([Service] AppDbContext ctx)
     {
         return ctx.Courses
