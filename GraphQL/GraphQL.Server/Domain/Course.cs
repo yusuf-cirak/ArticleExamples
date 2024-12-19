@@ -1,5 +1,6 @@
 ﻿
 using GraphQL.Server.Application.UseCases.Instructors.DataLoaders;
+using HotChocolate.Authorization;
 
 namespace GraphQL.Server.Domain;
 
@@ -28,6 +29,7 @@ public enum CourseType
 public sealed class CourseDto
 {
     public Guid Id { get; set; }
+    [Authorize]
     public string Title { get; set; }
     public string Description { get; set; }
 

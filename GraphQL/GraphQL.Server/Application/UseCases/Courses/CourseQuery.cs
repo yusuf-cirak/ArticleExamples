@@ -2,6 +2,7 @@
 using GraphQL.Server.Application.UseCases.Courses.Sorters;
 using GraphQL.Server.Domain;
 using GraphQL.Server.Infrastructure.Persistence;
+using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.Server.Application.UseCases.Courses;
@@ -67,10 +68,5 @@ public sealed class CourseQuery
             InstructorId = c.InstructorId,
             Type = c.Type
         });
-    }
-
-    public Course GetCourseById(Guid id, [Service] AppDbContext ctx)
-    {
-        return ctx.Courses.Find(id);
     }
 }
