@@ -2,9 +2,9 @@
 
 public sealed class Instructor : Entity
 {
-    public string Name { get; init; } = string.Empty;
-    public string Email { get; init; } = string.Empty;
-    public string PhoneNumber { get; init; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } = string.Empty;
 }
 
 public sealed record InstructorInputType(string Name, string Email, string PhoneNumber);
