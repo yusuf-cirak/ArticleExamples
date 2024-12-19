@@ -43,6 +43,4 @@ public sealed class InstructorMutation
     {
         return ctx.Instructors.Remove(ctx.Instructors.Find(id)) is not null;
     }
-    
-    
 }
