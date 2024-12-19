@@ -2,7 +2,7 @@
 using GraphQL.Server.Infrastructure.Persistence;
 using HotChocolate.Subscriptions;
 using Microsoft.EntityFrameworkCore;
-
+using Path = HotChocolate.Path;
 namespace GraphQL.Server.Application.UseCases.Courses;
 [MutationType]
 public sealed class CourseMutation
@@ -41,7 +41,7 @@ public sealed class CourseMutation
 
         if (course is null)
         {
-            throw new GraphQLException(new Error("Course not found", "COURSE_NOT_FOUND"));
+            throw new GraphQLException(new Error("Course not found", "COURSE_NOT_FOUND",extensions:new Dictionary<string,object>{{"statusCode",404}}));
         }
 
         course.Title = input.Title;

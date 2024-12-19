@@ -9,10 +9,12 @@ builder.AddGraphQL()
     .AddTypes()
     .AddFiltering()
     .AddSorting()
-    .AddProjections();
+    .AddProjections()
+    .AddInMemorySubscriptions();
 
 var app = builder.Build();
 
+app.UseWebSockets();
 app.MapGraphQL();
 
 SeedData.PersistData(app.Services);
