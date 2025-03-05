@@ -9,6 +9,12 @@ public static class SeedData
     {
         var scope = svp.CreateScope();
         var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+
+        if (ctx.Instructors.Any())
+        {
+            return;
+        }
         var instructors = new Faker<Instructor>()
             .RuleFor(i => i.Name, f => f.Name.FullName())
             .RuleFor(i => i.Email, f => f.Internet.Email())

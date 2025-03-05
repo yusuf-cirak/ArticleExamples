@@ -1,11 +1,12 @@
-using Bogus;
-using GraphQL.Server.Domain;
 using GraphQL.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContextPool<AppDbContext>(opt => opt.UseInMemoryDatabase("db"));
+builder.Services.AddDbContextPool<AppDbContext>(opt =>
+{
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 builder.AddGraphQL().AddTypes();
 
